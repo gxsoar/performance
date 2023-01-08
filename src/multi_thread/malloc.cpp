@@ -23,11 +23,11 @@ const int SIZE512B = 512;
 
 void test(const std::string &str) {
   // std::cout << str[0] << std::endl;
-  // for (int i = 0; i < MAXLOOP; ++ i) {
+  for (int i = 0; i < MAXLOOP; ++ i) {
     char *p = (char*)malloc(str.size());
     memcpy(p, str.c_str(), str.size());
     // free(p);
-  // }
+  }
 }
 
 int main(int argc, char const *argv[]) {

@@ -41,10 +41,11 @@ int main() {
 
     // Payload* payload = obj_pool.make<Payload>();
     auto test = [&](const std::string &str) {
-        // std::cout 
-        // /std::cout << "str size = " << str.size() << std::endl;
-        char *p = (char*)obj_pool.alloc(str.size());
-        memcpy(p, str.c_str(), str.size());
+        for (int i = 0; i < 10; ++ i) {
+            char *p = (char*)obj_pool.alloc(str.size());
+            memcpy(p, str.c_str(), str.size());
+        }
+        
     };
 
     start = std::chrono::steady_clock::now();

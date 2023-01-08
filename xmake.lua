@@ -41,6 +41,11 @@ target("multi_thread_allocator_test")
     add_deps("multi_thread_allocator")
     add_syslinks("pthread")
 
+target("main_test")
+    set_kind("binary")
+    add_files("src/single_thread/main.cpp")
+    -- add_links("tcmalloc")
+
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
