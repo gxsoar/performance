@@ -1,7 +1,4 @@
 {
-    files = {
-        "src/multi_thread/allocator_test.cpp"
-    },
     depfiles_gcc = "allocator_test.o: src/multi_thread/allocator_test.cpp  src/multi_thread/allocator.h\
 ",
     values = {
@@ -14,5 +11,8 @@
             "-std=c++14",
             "-DNDEBUG"
         }
+    },
+    files = {
+        "src/multi_thread/allocator_test.cpp"
     }
 }

@@ -1,7 +1,4 @@
 {
-    files = {
-        "src/single_thread/tcmalloc.cpp"
-    },
     depfiles_gcc = "tcmalloc.o: src/single_thread/tcmalloc.cpp\
 ",
     values = {
@@ -14,5 +11,8 @@
             "-std=c++14",
             "-DNDEBUG"
         }
+    },
+    files = {
+        "src/single_thread/tcmalloc.cpp"
     }
 }

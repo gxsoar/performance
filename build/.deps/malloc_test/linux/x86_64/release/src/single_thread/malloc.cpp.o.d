@@ -1,7 +1,4 @@
 {
-    files = {
-        "src/single_thread/malloc.cpp"
-    },
     depfiles_gcc = "malloc.o: src/single_thread/malloc.cpp\
 ",
     values = {
@@ -14,5 +11,8 @@
             "-std=c++14",
             "-DNDEBUG"
         }
+    },
+    files = {
+        "src/single_thread/malloc.cpp"
     }
 }

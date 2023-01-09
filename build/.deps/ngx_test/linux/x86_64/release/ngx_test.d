@@ -1,8 +1,4 @@
 {
-    files = {
-        "build/.objs/ngx_test/linux/x86_64/release/src/single_thread/ngx_test.cpp.o",
-        "build/linux/x86_64/release/libngx_malloc.a"
-    },
     values = {
         "/usr/bin/g++",
         {
@@ -11,5 +7,9 @@
             "-s",
             "-lngx_malloc"
         }
+    },
+    files = {
+        "build/.objs/ngx_test/linux/x86_64/release/src/single_thread/ngx_test.cpp.o",
+        "build/linux/x86_64/release/libngx_malloc.a"
     }
 }

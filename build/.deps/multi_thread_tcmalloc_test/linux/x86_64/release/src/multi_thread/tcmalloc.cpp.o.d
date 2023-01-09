@@ -1,9 +1,4 @@
 {
-    files = {
-        "src/multi_thread/tcmalloc.cpp"
-    },
-    depfiles_gcc = "tcmalloc.o: src/multi_thread/tcmalloc.cpp\
-",
     values = {
         "/usr/bin/gcc",
         {
@@ -14,5 +9,10 @@
             "-std=c++14",
             "-DNDEBUG"
         }
-    }
+    },
+    files = {
+        "src/multi_thread/tcmalloc.cpp"
+    },
+    depfiles_gcc = "tcmalloc.o: src/multi_thread/tcmalloc.cpp\
+"
 }

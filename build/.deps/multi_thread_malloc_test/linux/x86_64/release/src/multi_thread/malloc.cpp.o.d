@@ -1,9 +1,4 @@
 {
-    files = {
-        "src/multi_thread/malloc.cpp"
-    },
-    depfiles_gcc = "malloc.o: src/multi_thread/malloc.cpp\
-",
     values = {
         "/usr/bin/gcc",
         {
@@ -14,5 +9,10 @@
             "-std=c++14",
             "-DNDEBUG"
         }
-    }
+    },
+    files = {
+        "src/multi_thread/malloc.cpp"
+    },
+    depfiles_gcc = "malloc.o: src/multi_thread/malloc.cpp\
+"
 }

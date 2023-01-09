@@ -5,6 +5,7 @@
 #include <iostream>
 #include <chrono>
 #include <string>
+#include <random>
 
 const int MAXPOOL = 1024 * 1024 * 1024;
 const int MAXLOOP = 10;
@@ -44,54 +45,51 @@ void test(const std::string &str, Ngx_mem_pool* mempool) {
 }
 
 int main() {
-    std::string str1K(size1K, 'a');
-    std::string str1M(SIZE1M, 'a');
-    std::string str5M(SIZE5M, 'a');
-    std::string str10M(SIZE10M, 'a');
-    std::string str1G(SIZE1G, 'a');
-
-    std::string str16B(SIZE16B, 'a');
-    std::string str32B(SIZE32B, 'a');
-    std::string str512B(SIZE512B, 'a');
-
-    const int loop = 6;
-
     auto start = std::chrono::steady_clock::now();
-	  Ngx_mem_pool mempool(MAXPOOL); //创建一个内存池一个大小为MAXPOOL的内存池
+	Ngx_mem_pool mempool(MAXPOOL); //创建一个内存池一个大小为MAXPOOL的内存池
     auto end = std::chrono::steady_clock::now();
     auto last = std::chrono::duration<double, std::micro>(end - start).count();
     std::cout << "allocate 1G memeory pool: " << last << "ms\n";
 
-    // allocate 1k memory
 
-    start = std::chrono::steady_clock::now();
-    for (int i = 0; i < loop; ++ i)
-        test(str1K, &mempool);
-    end = std::chrono::steady_clock::now();
-    last = std::chrono::duration<double, std::milli>(end - start).count();
-    std::cout << "allocate 1k memory: " << last / loop << "ums\n";
+    int min_mem = 1,max_mem = 1024;
+    std::random_device seed;//硬件生成随机数种子
+	std::ranlux48 engine(seed());//利用种子生成随机数引擎
+    std::uniform_int_distribution<> distrib(min_mem, max_mem);//设置随机数范围，并为均匀分布
+    double res = 0.0;
+    const int loop = 7;
+    for (int i = 0; i < loop; ++ i) {
+        for (int i = 0; i < 100000; ++ i) {
+        int random = distrib(engine);
+        std::string tmp(random, 'a');
+        auto start = std::chrono::steady_clock::now();
+        char* p = (char*)mempool.ngx_palloc(tmp.size());
+        memcpy(p, tmp.c_str(), tmp.size());
+        auto end = std::chrono::steady_clock::now();
+        res += std::chrono::duration<double, std::milli>(end - start).count();
+        }
+    }
+    std::cout << "random allocate 1~1k memory 10000 times cost : " << res / 7 << "ms\n";
 
-    start = std::chrono::steady_clock::now();
-    for (int i = 0; i < loop; ++ i)
-        test(str1M, &mempool);
-    end = std::chrono::steady_clock::now();
-    last = std::chrono::duration<double>(end - start).count();
-    std::cout << "allocate 1M memory: " << last / loop << "s\n";
-
-    start = std::chrono::steady_clock::now();
-    for (int i = 0; i < loop; ++ i)
-        test(str5M, &mempool);
-    end = std::chrono::steady_clock::now();
-    last = std::chrono::duration<double>(end - start).count();
-    std::cout << "allocate 5M memory: " << last / loop << "s\n";
-
-    start = std::chrono::steady_clock::now();
-    for (int i = 0; i < loop; ++ i)
-        test(str10M, &mempool);
-    end = std::chrono::steady_clock::now();
-    last = std::chrono::duration<double>(end - start).count();
-    std::cout << "allocate 10M memory: " << last / loop << "s\n";
-	
+  // 随机分配1m~10m内存
+    min_mem = 1 * 1024 * 1024, max_mem = 10 * 1024 * 1024;
+    std::random_device seed2;
+    std::ranlux48 engine2(seed2());
+    std::uniform_int_distribution<> distrib2(min_mem, max_mem);
+    res = 0.0;
+    for (int i = 0; i < loop; ++ i) {
+        for (int i = 0; i < 100; ++ i) {
+        int random = distrib2(engine);
+        std::string tmp(random, 'a');
+        auto start = std::chrono::steady_clock::now();
+        char* p = (char*)mempool.ngx_palloc(tmp.size());
+        memcpy(p, tmp.c_str(), tmp.size());
+        auto end = std::chrono::steady_clock::now();
+        res += std::chrono::duration<double, std::milli>(end - start).count();
+        }
+    }
+  
+    std::cout << "random allocate 1m~10m memory 100 times cost: " << res / loop<< "ms\n";
     
 	ngx_pool_cleanup_s* str = mempool.ngx_pool_cleanup_add(sizeof(ngx_pool_cleanup_s));
 	str->handler = func1;

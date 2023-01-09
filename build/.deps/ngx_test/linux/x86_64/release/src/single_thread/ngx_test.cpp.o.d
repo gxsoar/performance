@@ -1,7 +1,4 @@
 {
-    files = {
-        "src/single_thread/ngx_test.cpp"
-    },
     depfiles_gcc = "ngx_test.o: src/single_thread/ngx_test.cpp src/single_thread/ngx_malloc.h\
 ",
     values = {
@@ -14,5 +11,8 @@
             "-std=c++14",
             "-DNDEBUG"
         }
+    },
+    files = {
+        "src/single_thread/ngx_test.cpp"
     }
 }

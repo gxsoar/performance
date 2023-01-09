@@ -32,12 +32,12 @@ int main() {
     std::string str10M(SIZE10M, 'a');
     std::string str1G(SIZE1G, 'a');
 
-    auto start = std::chrono::steady_clock::now();
+    // auto start = std::chrono::steady_clock::now();
     utils::Arena<utils::ThreadSafeObjectPoolAllocator<char*>, std::mutex> 
         obj_pool("pool", MAX_COUNT);
-    auto end = std::chrono::steady_clock::now();
-    auto last = std::chrono::duration<double, std::milli>(end - start).count();
-    std::cout << "allocate 1G memory : " << last << "ms\n";
+    // auto end = std::chrono::steady_clock::now();
+    // auto last = std::chrono::duration<double, std::milli>(end - start).count();
+    // std::cout << "allocate 1G memory : " << last << "ms\n";
 
     // Payload* payload = obj_pool.make<Payload>();
     auto test = [&](const std::string &str) {
@@ -45,10 +45,9 @@ int main() {
             char *p = (char*)obj_pool.alloc(str.size());
             memcpy(p, str.c_str(), str.size());
         }
-        
     };
 
-    start = std::chrono::steady_clock::now();
+    auto start = std::chrono::steady_clock::now();
     std::vector<std::thread> vt;
     for (int i = 0; i < 10; ++ i) {
         vt.push_back(std::thread(test, str10M));
@@ -56,8 +55,8 @@ int main() {
     for (auto &t : vt) {
         t.join();
     }
-    end = std::chrono::steady_clock::now();
-    last = std::chrono::duration<double, std::milli>(end - start).count();
+    auto end = std::chrono::steady_clock::now();
+    auto last = std::chrono::duration<double, std::milli>(end - start).count();
     std::cout << "10 threads allocate 10M memory: " << last << "ms\n";
 
     return 0;
