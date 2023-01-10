@@ -6,7 +6,7 @@
 #include <memory.h>
 #include <thread>
 #include <vector>
-// #include "gperftools/heap-checker.h"
+#include "gperftools/heap-checker.h"
 #include <string>
 
 const int MAXLOOP = 10;
@@ -42,14 +42,19 @@ int main(int argc, char const *argv[]) {
   std::string str512B(SIZE512B, 'a');
 
   auto start = std::chrono::steady_clock::now();
+  int op = atoi(argv[1]);
   std::vector<std::thread> vt;
   for (int i = 0; i < 10; ++ i) {
-    vt.push_back(std::thread(test, str10M));
+    if (op == 1)
+     vt.push_back(std::thread(test, str1M));
+    else if (op == 5) 
+      vt.push_back(std::thread(test, str5M));
+    else vt.push_back(std::thread(test, str10M));
   }
   for (auto &t : vt) t.join();
   auto end = std::chrono::steady_clock::now();
   auto last = std::chrono::duration<double, std::milli>(end - start).count();
-  std::cout << "10 threads allocate 10M memory: " << last << "ms\n";
+  std::cout << "10 threads allocate " << op << " memory: " << last << "ms\n";
 
   return 0;
 }

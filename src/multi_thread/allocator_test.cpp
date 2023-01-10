@@ -10,6 +10,19 @@ struct alignas(64) Payload {};
 
 static const size_t MAX_COUNT = 1024 * 1024 * 1024;
 
+struct TENM {
+    char sz[1024 * 1024 * 10] = { 0 };
+};
+
+struct ONEM {
+    char sz[1024 * 1024 * 1] = {0};
+
+};
+
+struct FIVEM {
+    char sz[1024 * 1024 * 5] = {0};
+};
+
 const int MAXLOOP = 10;
 const int size1K = 1 * 1024;
 const int SIZE1M = 1 * 1024 * 1024;
@@ -21,7 +34,7 @@ const int SIZE16B = 6;
 const int SIZE32B = 32;
 const int SIZE512B = 512;
 
-int main() {
+int main(int argc, char const *argv[]) {
     std::string str16B(SIZE16B, 'a');
     std::string str32B(SIZE32B, 'a');
     std::string str512B(SIZE512B, 'a');
@@ -31,15 +44,10 @@ int main() {
     std::string str5M(SIZE5M, 'a');
     std::string str10M(SIZE10M, 'a');
     std::string str1G(SIZE1G, 'a');
-
-    // auto start = std::chrono::steady_clock::now();
-    utils::Arena<utils::ThreadSafeObjectPoolAllocator<char*>, std::mutex> 
+    
+    // int op = atoi(argv[1]);
+    utils::Arena<utils::ThreadSafeObjectPoolAllocator<TENM>, std::mutex> 
         obj_pool("pool", MAX_COUNT);
-    // auto end = std::chrono::steady_clock::now();
-    // auto last = std::chrono::duration<double, std::milli>(end - start).count();
-    // std::cout << "allocate 1G memory : " << last << "ms\n";
-
-    // Payload* payload = obj_pool.make<Payload>();
     auto test = [&](const std::string &str) {
         for (int i = 0; i < 10; ++ i) {
             char *p = (char*)obj_pool.alloc(str.size());
