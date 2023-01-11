@@ -1,4 +1,8 @@
 {
+    files = {
+        "build/.objs/multi_thread_allocator_test/linux/x86_64/release/src/multi_thread/allocator_test.cpp.o",
+        "build/linux/x86_64/release/libmulti_thread_allocator.a"
+    },
     values = {
         "/usr/bin/g++",
         {
@@ -9,9 +13,5 @@
             "-ltcmalloc",
             "-lpthread"
         }
-    },
-    files = {
-        "build/.objs/multi_thread_allocator_test/linux/x86_64/release/src/multi_thread/allocator_test.cpp.o",
-        "build/linux/x86_64/release/libmulti_thread_allocator.a"
     }
 }
