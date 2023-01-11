@@ -10,9 +10,9 @@
             "-DNDEBUG"
         }
     },
+    depfiles_gcc = "tcmalloc.o: src/multi_thread/tcmalloc.cpp\
+",
     files = {
         "src/multi_thread/tcmalloc.cpp"
-    },
-    depfiles_gcc = "tcmalloc.o: src/multi_thread/tcmalloc.cpp\
-"
+    }
 }

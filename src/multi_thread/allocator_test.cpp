@@ -23,6 +23,10 @@ struct FIVEM {
     char sz[1024 * 1024 * 5] = {0};
 };
 
+struct ONEG{
+    char sz[1024 * 1024 * 1024] = {0};
+};
+
 const int MAXLOOP = 10;
 const int size1K = 1 * 1024;
 const int SIZE1M = 1 * 1024 * 1024;
@@ -44,28 +48,96 @@ int main(int argc, char const *argv[]) {
     std::string str5M(SIZE5M, 'a');
     std::string str10M(SIZE10M, 'a');
     std::string str1G(SIZE1G, 'a');
-    
-    // int op = atoi(argv[1]);
-    utils::Arena<utils::ThreadSafeObjectPoolAllocator<TENM>, std::mutex> 
-        obj_pool("pool", MAX_COUNT);
-    auto test = [&](const std::string &str) {
+
+    std::string op(argv[1]);
+    if (op == "1M") {
+        utils::Arena<utils::ThreadSafeObjectPoolAllocator<ONEM>, std::mutex> 
+            obj_pool("pool", MAX_COUNT);
+        auto test = [&](const std::string &str) {
+            for (int i = 0; i < 10; ++ i) {
+                char *p = (char*)obj_pool.alloc(str.size());
+                memcpy(p, str.c_str(), str.size());
+            }
+        }; 
+        auto start = std::chrono::steady_clock::now();
+        std::vector<std::thread> vt;
         for (int i = 0; i < 10; ++ i) {
-            char *p = (char*)obj_pool.alloc(str.size());
-            memcpy(p, str.c_str(), str.size());
+            vt.push_back(std::thread(test, str1M));
         }
-    };
-
-    auto start = std::chrono::steady_clock::now();
-    std::vector<std::thread> vt;
-    for (int i = 0; i < 10; ++ i) {
-        vt.push_back(std::thread(test, str10M));
+        for (auto &t : vt) {
+            t.join();
+        }
+        auto end = std::chrono::steady_clock::now();
+        auto last = std::chrono::duration<double, std::milli>(end - start).count();
+        std::cout << "10 threads allocate " << op <<  " memory: " << last << "ms\n";
     }
-    for (auto &t : vt) {
-        t.join();
+    
+    if (op == "5M") {
+        utils::Arena<utils::ThreadSafeObjectPoolAllocator<FIVEM>, std::mutex> 
+            obj_pool("pool", MAX_COUNT);
+        auto test = [&](const std::string &str) {
+            for (int i = 0; i < 10; ++ i) {
+                char *p = (char*)obj_pool.alloc(str.size());
+                memcpy(p, str.c_str(), str.size());
+            }
+        }; 
+        auto start = std::chrono::steady_clock::now();
+        std::vector<std::thread> vt;
+        for (int i = 0; i < 10; ++ i) {
+            vt.push_back(std::thread(test, str5M));
+        }
+        for (auto &t : vt) {
+            t.join();
+        }
+        auto end = std::chrono::steady_clock::now();
+        auto last = std::chrono::duration<double, std::milli>(end - start).count();
+        std::cout << "10 threads allocate " << op <<  " memory: " << last << "ms\n";
     }
-    auto end = std::chrono::steady_clock::now();
-    auto last = std::chrono::duration<double, std::milli>(end - start).count();
-    std::cout << "10 threads allocate 10M memory: " << last << "ms\n";
+    
 
+    if (op == "10M") {
+        utils::Arena<utils::ThreadSafeObjectPoolAllocator<TENM>, std::mutex> 
+            obj_pool("pool", MAX_COUNT);
+        auto test = [&](const std::string &str) {
+            for (int i = 0; i < 10; ++ i) {
+                char *p = (char*)obj_pool.alloc(str.size());
+                memcpy(p, str.c_str(), str.size());
+            }
+        }; 
+        auto start = std::chrono::steady_clock::now();
+        std::vector<std::thread> vt;
+        for (int i = 0; i < 10; ++ i) {
+            vt.push_back(std::thread(test, str10M));
+        }
+        for (auto &t : vt) {
+            t.join();
+        }
+        auto end = std::chrono::steady_clock::now();
+        auto last = std::chrono::duration<double, std::milli>(end - start).count();
+        std::cout << "10 threads allocate " << op <<  " memory: " << last << "ms\n";
+    }
+    
+    if (op == "1G") {
+        utils::Arena<utils::ThreadSafeObjectPoolAllocator<ONEG>, std::mutex> 
+            obj_pool("pool", MAX_COUNT * 10);
+        auto test = [&](const std::string &str) {
+            for (int i = 0; i < 1; ++ i) {
+                char *p = (char*)obj_pool.alloc(str.size());
+                memcpy(p, str.c_str(), str.size());
+            }
+        }; 
+        auto start = std::chrono::steady_clock::now();
+        std::vector<std::thread> vt;
+        for (int i = 0; i < 10; ++ i) {
+            vt.push_back(std::thread(test, str1G));
+        }
+        for (auto &t : vt) {
+            t.join();
+        }
+        auto end = std::chrono::steady_clock::now();
+        auto last = std::chrono::duration<double, std::milli>(end - start).count();
+        std::cout << "10 threads allocate " << op <<  " memory: " << last << "ms\n";
+    }
+    
     return 0;
 }
