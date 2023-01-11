@@ -10,6 +10,9 @@
 #include <cstddef>
 #include <mutex>
 #include <type_traits>
+#include <memory.h>
+#include <malloc.h>
+#include <iostream>
 
 #include <assert.h>
 #include <stdlib.h>
@@ -58,7 +61,9 @@ inline void* aligned_alloc(size_t size, size_t align) noexcept {
 #if defined(WIN32)
 	p = ::_aligned_malloc(size, align);
 #else
-	::posix_memalign(&p, align, size);
+	// ::posix_memalign(&p, align, size);
+    p = ::memalign(align, size);
+    
 #endif
 	return p;
 }
@@ -346,6 +351,7 @@ public:
     void* alloc(size_t size = ELEMENT_SIZE,
                 size_t alignment = ALIGNMENT, size_t offset = OFFSET) noexcept {
         assert(size <= ELEMENT_SIZE);
+        // std::cout << alignment << " " << ALIGNMENT << std::endl;
         assert(alignment <= ALIGNMENT);
         assert(offset == OFFSET);
         return mFreeList.pop();

@@ -54,10 +54,14 @@ int main(int argc, char const *argv[]) {
         utils::Arena<utils::ThreadSafeObjectPoolAllocator<ONEM>, std::mutex> 
             obj_pool("pool", MAX_COUNT);
         auto test = [&](const std::string &str) {
+            auto start = std::chrono::steady_clock::now();
             for (int i = 0; i < 10; ++ i) {
                 char *p = (char*)obj_pool.alloc(str.size());
                 memcpy(p, str.c_str(), str.size());
             }
+            auto end = std::chrono::steady_clock::now();
+            auto last = std::chrono::duration<double, std::milli>(end - start).count();
+            std::cout << "thread " << std::this_thread::get_id() << " malloc use " << last << "ms"<< std::endl;
         }; 
         auto start = std::chrono::steady_clock::now();
         std::vector<std::thread> vt;
@@ -76,10 +80,14 @@ int main(int argc, char const *argv[]) {
         utils::Arena<utils::ThreadSafeObjectPoolAllocator<FIVEM>, std::mutex> 
             obj_pool("pool", MAX_COUNT);
         auto test = [&](const std::string &str) {
+            auto start = std::chrono::steady_clock::now();
             for (int i = 0; i < 10; ++ i) {
                 char *p = (char*)obj_pool.alloc(str.size());
                 memcpy(p, str.c_str(), str.size());
             }
+            auto end = std::chrono::steady_clock::now();
+            auto last = std::chrono::duration<double, std::milli>(end - start).count();
+            std::cout << "thread " << std::this_thread::get_id() << " malloc use " << last << "ms" << std::endl;
         }; 
         auto start = std::chrono::steady_clock::now();
         std::vector<std::thread> vt;
@@ -99,10 +107,14 @@ int main(int argc, char const *argv[]) {
         utils::Arena<utils::ThreadSafeObjectPoolAllocator<TENM>, std::mutex> 
             obj_pool("pool", MAX_COUNT);
         auto test = [&](const std::string &str) {
+            auto start = std::chrono::steady_clock::now();
             for (int i = 0; i < 10; ++ i) {
                 char *p = (char*)obj_pool.alloc(str.size());
                 memcpy(p, str.c_str(), str.size());
             }
+            auto end = std::chrono::steady_clock::now();
+            auto last = std::chrono::duration<double, std::milli>(end - start).count();
+            std::cout << "thread " << std::this_thread::get_id() << " malloc use " << last << " ms" << std::endl;
         }; 
         auto start = std::chrono::steady_clock::now();
         std::vector<std::thread> vt;

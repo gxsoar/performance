@@ -24,11 +24,15 @@ void test(const std::string &str) {
   // std::cout << str[0] << std::endl;
   int loop = 10;
   if (str.size() == SIZE1G) loop = 1;
+  auto start = std::chrono::steady_clock::now();
   for (int i = 0; i < loop; ++ i) {
     char *p = (char*)malloc(str.size());
     memcpy(p, str.c_str(), str.size());
     // free(p);
   }
+  auto end = std::chrono::steady_clock::now();
+  auto last = std::chrono::duration<double, std::milli>(end - start).count();
+  std::cout << "thread " << std::this_thread::get_id() << "malloc use" << last << std::endl;
 }
 
 int main(int argc, char const *argv[]) {
