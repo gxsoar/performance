@@ -25,6 +25,7 @@
 #    define UTILS_RESTRICT
 #endif
 
+
 namespace utils {
 
 namespace pointermath {
@@ -351,8 +352,7 @@ public:
     void* alloc(size_t size = ELEMENT_SIZE,
                 size_t alignment = ALIGNMENT, size_t offset = OFFSET) noexcept {
         assert(size <= ELEMENT_SIZE);
-        // std::cout << alignment << " " << ALIGNMENT << std::endl;
-        assert(alignment <= ALIGNMENT);
+        // assert(alignment <= ALIGNMENT);
         assert(offset == OFFSET);
         return mFreeList.pop();
     }

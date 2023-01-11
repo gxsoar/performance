@@ -21,18 +21,18 @@ const int SIZE512B = 512;
 
 
 void test(const std::string &str) {
-  // std::cout << str[0] << std::endl;
   int loop = 10;
   if (str.size() == SIZE1G) loop = 1;
-  auto start = std::chrono::steady_clock::now();
+  
   for (int i = 0; i < loop; ++ i) {
+    // auto start = std::chrono::steady_clock::now();
     char *p = (char*)malloc(str.size());
     memcpy(p, str.c_str(), str.size());
-    // free(p);
+    // auto end = std::chrono::steady_clock::now();
+    // auto last = std::chrono::duration<double, std::milli>(end - start).count();
+    // printf("%lf\n", last);
+    // printf("thread %d malloc use %lf ms\n", std::this_thread::get_id(), last);
   }
-  auto end = std::chrono::steady_clock::now();
-  auto last = std::chrono::duration<double, std::milli>(end - start).count();
-  std::cout << "thread " << std::this_thread::get_id() << " malloc use " << last  << "ms\n";
 }
 
 int main(int argc, char const *argv[]) {
@@ -46,20 +46,30 @@ int main(int argc, char const *argv[]) {
   std::string str32B(SIZE32B, 'a');
   std::string str512B(SIZE512B, 'a');
   std::string op(argv[1]);
-  auto start = std::chrono::steady_clock::now();
-  std::vector<std::thread> vt;
-  for (int i = 0; i < 10; ++ i) {
-    if (op == "1M")
-     vt.push_back(std::thread(test, str1M));
-    else if (op == "5M") 
-      vt.push_back(std::thread(test, str5M));
-    else if (op == "10M") vt.push_back(std::thread(test, str10M));
-    else vt.push_back(std::thread(test, str1G));
+  
+  if (op != "1G") {
+    auto start = std::chrono::steady_clock::now();
+    std::vector<std::thread> vt;
+    for (int i = 0; i < 10; ++ i) {
+      if (op == "1M")
+      vt.push_back(std::thread(test, str1M));
+      else if (op == "5M") 
+        vt.push_back(std::thread(test, str5M));
+      else if (op == "10M") vt.push_back(std::thread(test, str10M));
+      else vt.push_back(std::thread(test, str1G));
+    }
+    for (auto &t : vt) t.join();
+    auto end = std::chrono::steady_clock::now();
+    auto last = std::chrono::duration<double, std::milli>(end - start).count();
+    std::cout << "10 threads allocate " << op << " memory: " << last << "ms\n";
+  } else {
+    auto start = std::chrono::steady_clock::now();
+    char* p = (char*)malloc(str1G.size());
+    memcpy(p, str1G.c_str(), str1G.size());
+    auto end = std::chrono::steady_clock::now();
+    auto last = std::chrono::duration<double, std::milli>(end - start).count();
+    printf("allocate 1G use : %lf ms\n", last);
   }
-  for (auto &t : vt) t.join();
-  auto end = std::chrono::steady_clock::now();
-  auto last = std::chrono::duration<double, std::milli>(end - start).count();
-  std::cout << "10 threads allocate " << op << " memory: " << last << "ms\n";
-
+  
   return 0;
 }

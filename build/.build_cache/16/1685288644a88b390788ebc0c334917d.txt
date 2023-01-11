@@ -1,0 +1,21 @@
+{
+    errdata = "\27[01m\27[Ksrc/multi_thread/allocator_test.cpp:\27[m\27[K In lambda function:\
+\27[01m\27[Ksrc/multi_thread/allocator_test.cpp:68:24:\27[m\27[K \27[01;35m\27[Kwarning: \27[m\27[Kformat ‘\27[01m\27[K%d\27[m\27[K’ expects argument of type ‘\27[01m\27[Kint\27[m\27[K’, but argument 2 has type ‘\27[01m\27[Kstd::thread::id\27[m\27[K’ [\27[01;35m\27[K-Wformat=\27[m\27[K]\
+   68 |                 printf(\27[01;35m\27[K\"thread %d malloc use %lf ms\\n\"\27[m\27[K, \27[32m\27[Kstd::this_thread::get_id()\27[m\27[K, last);\
+      |                        \27[01;35m\27[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\27[m\27[K  \27[32m\27[K~~~~~~~~~~~~~~~~~~~~~~~~~~\27[m\27[K\
+      |                                                                                 \27[32m\27[K|\27[m\27[K\
+      |                                                                                 \27[32m\27[Kstd::thread::id\27[m\27[K\
+\27[01m\27[Ksrc/multi_thread/allocator_test.cpp:\27[m\27[K In lambda function:\
+\27[01m\27[Ksrc/multi_thread/allocator_test.cpp:100:24:\27[m\27[K \27[01;35m\27[Kwarning: \27[m\27[Kformat ‘\27[01m\27[K%d\27[m\27[K’ expects argument of type ‘\27[01m\27[Kint\27[m\27[K’, but argument 2 has type ‘\27[01m\27[Kstd::thread::id\27[m\27[K’ [\27[01;35m\27[K-Wformat=\27[m\27[K]\
+  100 |                 printf(\27[01;35m\27[K\"thread %d malloc use %lf ms\\n\"\27[m\27[K, \27[32m\27[Kstd::this_thread::get_id()\27[m\27[K, last);\
+      |                        \27[01;35m\27[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\27[m\27[K  \27[32m\27[K~~~~~~~~~~~~~~~~~~~~~~~~~~\27[m\27[K\
+      |                                                                                 \27[32m\27[K|\27[m\27[K\
+      |                                                                                 \27[32m\27[Kstd::thread::id\27[m\27[K\
+\27[01m\27[Ksrc/multi_thread/allocator_test.cpp:\27[m\27[K In lambda function:\
+\27[01m\27[Ksrc/multi_thread/allocator_test.cpp:132:24:\27[m\27[K \27[01;35m\27[Kwarning: \27[m\27[Kformat ‘\27[01m\27[K%d\27[m\27[K’ expects argument of type ‘\27[01m\27[Kint\27[m\27[K’, but argument 2 has type ‘\27[01m\27[Kstd::thread::id\27[m\27[K’ [\27[01;35m\27[K-Wformat=\27[m\27[K]\
+  132 |                 printf(\27[01;35m\27[K\"thread %d malloc use %lf ms\\n\"\27[m\27[K, \27[32m\27[Kstd::this_thread::get_id()\27[m\27[K, last);\
+      |                        \27[01;35m\27[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\27[m\27[K  \27[32m\27[K~~~~~~~~~~~~~~~~~~~~~~~~~~\27[m\27[K\
+      |                                                                                 \27[32m\27[K|\27[m\27[K\
+      |                                                                                 \27[32m\27[Kstd::thread::id\27[m\27[K\
+"
+}

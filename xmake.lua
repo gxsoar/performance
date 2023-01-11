@@ -43,7 +43,7 @@ target("multi_thread_allocator_test")
     add_files("src/multi_thread/allocator_test.cpp")
     add_deps("multi_thread_allocator")
     add_syslinks("pthread")
-    -- add_links("tcmalloc")
+    add_links("tcmalloc")
 
 target("main_test")
     set_kind("binary")

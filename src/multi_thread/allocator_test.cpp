@@ -51,17 +51,23 @@ int main(int argc, char const *argv[]) {
 
     std::string op(argv[1]);
     if (op == "1M") {
+        auto st = std::chrono::steady_clock::now();
         utils::Arena<utils::ThreadSafeObjectPoolAllocator<ONEM>, std::mutex> 
             obj_pool("pool", MAX_COUNT);
+        auto ed = std::chrono::steady_clock::now();
+        auto lt = std::chrono::duration<double, std::milli>(ed - st).count();
+        std::cout << "allocate 1G memory pool use : " << lt << " ms\n";
         auto test = [&](const std::string &str) {
-            auto start = std::chrono::steady_clock::now();
+            
             for (int i = 0; i < 10; ++ i) {
+                auto start = std::chrono::steady_clock::now();
                 char *p = (char*)obj_pool.alloc(str.size());
                 memcpy(p, str.c_str(), str.size());
+                auto end = std::chrono::steady_clock::now();
+                auto last = std::chrono::duration<double, std::milli>(end - start).count();
+                printf("thread %d malloc use %lf ms\n", std::this_thread::get_id(), last);
             }
-            auto end = std::chrono::steady_clock::now();
-            auto last = std::chrono::duration<double, std::milli>(end - start).count();
-            std::cout << "thread " << std::this_thread::get_id() << " malloc use " << last << "ms"<< std::endl;
+            
         }; 
         auto start = std::chrono::steady_clock::now();
         std::vector<std::thread> vt;
@@ -73,21 +79,27 @@ int main(int argc, char const *argv[]) {
         }
         auto end = std::chrono::steady_clock::now();
         auto last = std::chrono::duration<double, std::milli>(end - start).count();
-        std::cout << "10 threads allocate " << op <<  " memory: " << last << "ms\n";
+        std::cout << "10 threads allocate " << op <<  " memory: " << last << " ms\n";
     }
     
     if (op == "5M") {
+        auto st = std::chrono::steady_clock::now();
         utils::Arena<utils::ThreadSafeObjectPoolAllocator<FIVEM>, std::mutex> 
             obj_pool("pool", MAX_COUNT);
+        auto ed = std::chrono::steady_clock::now();
+        auto lt = std::chrono::duration<double, std::milli>(ed - st).count();
+        std::cout << "allocate 1G memory pool use : " << lt << " ms\n";
         auto test = [&](const std::string &str) {
-            auto start = std::chrono::steady_clock::now();
+            
             for (int i = 0; i < 10; ++ i) {
+                auto start = std::chrono::steady_clock::now();
                 char *p = (char*)obj_pool.alloc(str.size());
                 memcpy(p, str.c_str(), str.size());
+                auto end = std::chrono::steady_clock::now();
+                auto last = std::chrono::duration<double, std::milli>(end - start).count();
+                printf("thread %d malloc use %lf ms\n", std::this_thread::get_id(), last); 
             }
-            auto end = std::chrono::steady_clock::now();
-            auto last = std::chrono::duration<double, std::milli>(end - start).count();
-            std::cout << "thread " << std::this_thread::get_id() << " malloc use " << last << "ms" << std::endl;
+            
         }; 
         auto start = std::chrono::steady_clock::now();
         std::vector<std::thread> vt;
@@ -99,22 +111,28 @@ int main(int argc, char const *argv[]) {
         }
         auto end = std::chrono::steady_clock::now();
         auto last = std::chrono::duration<double, std::milli>(end - start).count();
-        std::cout << "10 threads allocate " << op <<  " memory: " << last << "ms\n";
+        std::cout << "10 threads allocate " << op <<  " memory: " << last << " ms\n";
     }
     
-
     if (op == "10M") {
+        auto st = std::chrono::steady_clock::now();
         utils::Arena<utils::ThreadSafeObjectPoolAllocator<TENM>, std::mutex> 
             obj_pool("pool", MAX_COUNT);
+        auto ed = std::chrono::steady_clock::now();
+        auto lt = std::chrono::duration<double, std::milli>(ed - st).count();
+        // std::cout << "allocate 1G memory pool use : " << lt << " ms\n";
         auto test = [&](const std::string &str) {
-            auto start = std::chrono::steady_clock::now();
+            
             for (int i = 0; i < 10; ++ i) {
+                // auto start = std::chrono::steady_clock::now();
                 char *p = (char*)obj_pool.alloc(str.size());
                 memcpy(p, str.c_str(), str.size());
+                // auto end = std::chrono::steady_clock::now();
+                // auto last = std::chrono::duration<double, std::milli>(end - start).count();
+                // printf("%lf\n", last);
+                // printf("thread %d malloc use %lf ms\n", std::this_thread::get_id(), last);
             }
-            auto end = std::chrono::steady_clock::now();
-            auto last = std::chrono::duration<double, std::milli>(end - start).count();
-            std::cout << "thread " << std::this_thread::get_id() << " malloc use " << last << " ms" << std::endl;
+            
         }; 
         auto start = std::chrono::steady_clock::now();
         std::vector<std::thread> vt;
@@ -126,7 +144,7 @@ int main(int argc, char const *argv[]) {
         }
         auto end = std::chrono::steady_clock::now();
         auto last = std::chrono::duration<double, std::milli>(end - start).count();
-        std::cout << "10 threads allocate " << op <<  " memory: " << last << "ms\n";
+        std::cout << "10 threads allocate " << op <<  " memory: " << last << " ms\n";
     }
     
     if (op == "1G") {
