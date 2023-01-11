@@ -10,7 +10,6 @@
 #include <cstddef>
 #include <mutex>
 #include <type_traits>
-#include <iostream>
 
 #include <assert.h>
 #include <stdlib.h>
@@ -336,7 +335,7 @@ private:
 // ------------------------------------------------------------------------------------------------
 
 template <
-        size_t ELEMENT_SIZE = 10 * 1024 * 1024,
+        size_t ELEMENT_SIZE,
         size_t ALIGNMENT = alignof(std::max_align_t),
         size_t OFFSET = 0,
         typename FREELIST = FreeList>
@@ -346,10 +345,9 @@ public:
     // our allocator concept
     void* alloc(size_t size = ELEMENT_SIZE,
                 size_t alignment = ALIGNMENT, size_t offset = OFFSET) noexcept {
-        // std::cout << "size = " << size << " " << "ELEMENT_SIZE = " << ELEMENT_SIZE << "\n";
-        // assert(size <= ELEMENT_SIZE);s
-        // assert(alignment <= ALIGNMENT);
-        // assert(offset == OFFSET);
+        assert(size <= ELEMENT_SIZE);
+        assert(alignment <= ALIGNMENT);
+        assert(offset == OFFSET);
         return mFreeList.pop();
     }
 
@@ -396,7 +394,7 @@ using ObjectPoolAllocator = PoolAllocator<sizeof(T),
         UTILS_MAX(alignof(FreeList), alignof(T)), OFFSET>;
 
 template <typename T, size_t OFFSET = 0>
-using ThreadSafeObjectPoolAllocator = PoolAllocator<10 * 1024 * 1024,
+using ThreadSafeObjectPoolAllocator = PoolAllocator<sizeof(T),
         UTILS_MAX(alignof(FreeList), alignof(T)), OFFSET, AtomicFreeList>;
 
 
@@ -852,3 +850,4 @@ private:
 };
 
 } // namespace utils
+
