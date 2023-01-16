@@ -27,6 +27,14 @@ struct ONEG{
     char sz[1024 * 1024 * 1024] = {0};
 };
 
+struct MEM_32B {
+    char sz[32] = {0};
+};
+
+struct MEM_512B {
+    char sz[512] = {0};
+};
+
 const int MAXLOOP = 10;
 const int size1K = 1 * 1024;
 const int SIZE1M = 1 * 1024 * 1024;
@@ -169,5 +177,52 @@ int main(int argc, char const *argv[]) {
         std::cout << "10 threads allocate " << op <<  " memory: " << last << "ms\n";
     }
     
+    if (op == "32B") {
+        utils::Arena<utils::ThreadSafeObjectPoolAllocator<MEM_32B>, std::mutex> 
+            obj_pool("pool", MAX_COUNT);
+        auto small_memory_test = [&]() {
+            auto start = std::chrono::steady_clock::now();
+            for (int i = 0; i < 10000; ++ i) {
+                char* p = (char*)obj_pool.alloc(str32B.size());
+                memcpy(p, str32B.c_str(), str32B.size());
+            }
+            auto end = std::chrono::steady_clock::now();
+            auto last = std::chrono::duration<double, std::milli>(end - start).count();
+            printf("thread %d random malloc 32B memory 10000 times used %lf ms\n", std::this_thread::get_id(), last);
+        };
+        auto start = std::chrono::steady_clock::now();
+        std::vector<std::thread> vt;
+        for (int i = 0; i < 10; ++ i) {
+        vt.push_back(std::thread(small_memory_test));
+        }
+        for (auto &t : vt) t.join();
+        auto end = std::chrono::steady_clock::now();
+        auto last = std::chrono::duration<double, std::milli>(end - start).count();
+        printf("10 threads random allocate 32B memory used %lf ms\n", last);
+    }
+    
+    if (op == "512B") {
+        utils::Arena<utils::ThreadSafeObjectPoolAllocator<MEM_512B>, std::mutex> 
+            obj_pool("pool", MAX_COUNT);
+        auto small_memory_test = [&]() {
+            auto start = std::chrono::steady_clock::now();
+            for (int i = 0; i < 10000; ++ i) {
+                char* p = (char*)obj_pool.alloc(str512B.size());
+                memcpy(p, str512B.c_str(), str512B.size());
+            }
+            auto end = std::chrono::steady_clock::now();
+            auto last = std::chrono::duration<double, std::milli>(end - start).count();
+            printf("thread %d random malloc 512B memory 10000 times used %lf ms\n", std::this_thread::get_id(), last);
+        };
+        auto start = std::chrono::steady_clock::now();
+        std::vector<std::thread> vt;
+        for (int i = 0; i < 10; ++ i) {
+        vt.push_back(std::thread(small_memory_test));
+        }
+        for (auto &t : vt) t.join();
+        auto end = std::chrono::steady_clock::now();
+        auto last = std::chrono::duration<double, std::milli>(end - start).count();
+        printf("10 threads random allocate 512B memory used %lf ms\n", last);
+    }
     return 0;
 }

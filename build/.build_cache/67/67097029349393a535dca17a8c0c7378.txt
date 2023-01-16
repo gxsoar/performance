@@ -1,0 +1,15 @@
+{
+    errdata = "\27[01m\27[Ksrc/multi_thread/tcmalloc.cpp:\27[m\27[K In lambda function:\
+\27[01m\27[Ksrc/multi_thread/tcmalloc.cpp:84:14:\27[m\27[K \27[01;35m\27[Kwarning: \27[m\27[Kformat ‘\27[01m\27[K%d\27[m\27[K’ expects argument of type ‘\27[01m\27[Kint\27[m\27[K’, but argument 2 has type ‘\27[01m\27[Kstd::thread::id\27[m\27[K’ [\27[01;35m\27[K-Wformat=\27[m\27[K]\
+   84 |       printf(\27[01;35m\27[K\"thread %d malloc 32B memory 10000 times used %lf ms\\n\"\27[m\27[K, \27[32m\27[Kstd::this_thread::get_id()\27[m\27[K, last);\
+      |              \27[01;35m\27[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\27[m\27[K  \27[32m\27[K~~~~~~~~~~~~~~~~~~~~~~~~~~\27[m\27[K\
+      |                                                                                               \27[32m\27[K|\27[m\27[K\
+      |                                                                                               \27[32m\27[Kstd::thread::id\27[m\27[K\
+\27[01m\27[Ksrc/multi_thread/tcmalloc.cpp:\27[m\27[K In lambda function:\
+\27[01m\27[Ksrc/multi_thread/tcmalloc.cpp:105:14:\27[m\27[K \27[01;35m\27[Kwarning: \27[m\27[Kformat ‘\27[01m\27[K%d\27[m\27[K’ expects argument of type ‘\27[01m\27[Kint\27[m\27[K’, but argument 2 has type ‘\27[01m\27[Kstd::thread::id\27[m\27[K’ [\27[01;35m\27[K-Wformat=\27[m\27[K]\
+  105 |       printf(\27[01;35m\27[K\"thread %d  malloc 32B memory 10000 times used %lf ms\\n\"\27[m\27[K, \27[32m\27[Kstd::this_thread::get_id()\27[m\27[K, last);\
+      |              \27[01;35m\27[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\27[m\27[K  \27[32m\27[K~~~~~~~~~~~~~~~~~~~~~~~~~~\27[m\27[K\
+      |                                                                                                \27[32m\27[K|\27[m\27[K\
+      |                                                                                                \27[32m\27[Kstd::thread::id\27[m\27[K\
+"
+}

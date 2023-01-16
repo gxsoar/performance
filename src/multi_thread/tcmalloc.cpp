@@ -8,6 +8,7 @@
 #include <vector>
 #include "gperftools/heap-checker.h"
 #include <string>
+#include <random>
 
 const int size1K = 1 * 1024;
 const int SIZE1M = 1 * 1024 * 1024;
@@ -47,7 +48,7 @@ int main(int argc, char const *argv[]) {
   std::string str512B(SIZE512B, 'a');
   std::string op(argv[1]);
   
-  if (op != "1G") {
+  if (op == "1M" || op == "5M" || op == "10M") {
     auto start = std::chrono::steady_clock::now();
     std::vector<std::thread> vt;
     for (int i = 0; i < 10; ++ i) {
@@ -62,13 +63,56 @@ int main(int argc, char const *argv[]) {
     auto end = std::chrono::steady_clock::now();
     auto last = std::chrono::duration<double, std::milli>(end - start).count();
     std::cout << "10 threads allocate " << op << " memory: " << last << "ms\n";
-  } else {
+  } else if (op == "1G"){
     auto start = std::chrono::steady_clock::now();
     char* p = (char*)malloc(str1G.size());
     memcpy(p, str1G.c_str(), str1G.size());
     auto end = std::chrono::steady_clock::now();
     auto last = std::chrono::duration<double, std::milli>(end - start).count();
     printf("allocate 1G use : %lf ms\n", last);
+  } else if (op == "32B") {
+    auto small_memory_test = [&]() {
+      // 随机分配0~1k内存
+      auto start = std::chrono::steady_clock::now();
+      for (int i = 0; i < 10000; ++ i) {
+        char* p = (char*)malloc(str32B.size());
+        memcpy(p, str32B.c_str(), str32B.size());
+        
+      }
+      auto end = std::chrono::steady_clock::now();
+      auto last = std::chrono::duration<double, std::milli>(end - start).count();
+      printf("thread %d malloc 32B memory 10000 times used %lf ms\n", std::this_thread::get_id(), last);
+    };
+    auto start = std::chrono::steady_clock::now();
+    std::vector<std::thread> vt;
+    for (int i = 0; i < 10; ++ i) {
+      vt.push_back(std::thread(small_memory_test));
+    }
+    for (auto &t : vt) t.join();
+    auto end = std::chrono::steady_clock::now();
+    auto last = std::chrono::duration<double, std::milli>(end - start).count();
+    printf("10 threads  allocate 32B memory used %lf ms\n", last);
+  } else {
+    auto small_memory_test = [&]() {
+      auto start = std::chrono::steady_clock::now();
+      for (int i = 0; i < 10000; ++ i) {
+        char* p = (char*)malloc(str512B.size());
+        memcpy(p, str512B.c_str(), str512B.size());
+        
+      }
+      auto end = std::chrono::steady_clock::now();
+      auto last = std::chrono::duration<double, std::milli>(end - start).count();
+      printf("thread %d  malloc 32B memory 10000 times used %lf ms\n", std::this_thread::get_id(), last);
+    };
+    auto start = std::chrono::steady_clock::now();
+    std::vector<std::thread> vt;
+    for (int i = 0; i < 10; ++ i) {
+      vt.push_back(std::thread(small_memory_test));
+    }
+    for (auto &t : vt) t.join();
+    auto end = std::chrono::steady_clock::now();
+    auto last = std::chrono::duration<double, std::milli>(end - start).count();
+    printf("10 threads random allocate 32B memory used %lf ms\n", last);
   }
   
   return 0;
