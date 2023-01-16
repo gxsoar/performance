@@ -6,7 +6,6 @@
 #include <memory.h>
 #include <thread>
 #include <vector>
-#include "gperftools/heap-checker.h"
 #include <string>
 #include <random>
 
